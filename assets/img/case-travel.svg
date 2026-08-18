@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#581c87"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#g)"/>
+  <text x="400" y="230" text-anchor="middle" font-family="sans-serif" font-size="48" font-weight="700" fill="rgba(255,255,255,.15)">TRAVEL</text>
+  <text x="400" y="290" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="500" fill="rgba(255,255,255,.1)">SEO Case Study</text>
+</svg>
