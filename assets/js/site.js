@@ -62,9 +62,11 @@ function initMainContactForm(){
     postForm('lib/contact-us-send.php', data).then(function(){
       submitBtn.disabled = false; submitBtn.querySelector('.btn-idle').style.display='inline'; submitBtn.querySelector('.btn-sending').style.display='none';
       successEl.style.display='block'; form.reset();
+      sdmTrack('generate_lead', { form_type:'contact', form_location:location.pathname, service:data.service, budget:data.budget });
     }).catch(function(err){
       submitBtn.disabled = false; submitBtn.querySelector('.btn-idle').style.display='inline'; submitBtn.querySelector('.btn-sending').style.display='none';
       errorEl.textContent = (err && err.message) || 'Something went wrong. Please try again or WhatsApp us directly.'; errorEl.style.display='block';
+      sdmTrack('form_error', { form_type:'contact', form_location:location.pathname, error_message:(err && err.message) || 'unknown' });
     });
   });
 }
@@ -89,9 +91,11 @@ function initConsultForm(){
     postForm('lib/consultation-send.php', data).then(function(){
       submitBtn.disabled = false; submitBtn.querySelector('.btn-idle').style.display='inline'; submitBtn.querySelector('.btn-sending').style.display='none';
       successEl.style.display='block'; form.reset();
+      sdmTrack('generate_lead', { form_type:'consultation', form_location:location.pathname, goal:data.goal, format:data.format });
     }).catch(function(err){
       submitBtn.disabled = false; submitBtn.querySelector('.btn-idle').style.display='inline'; submitBtn.querySelector('.btn-sending').style.display='none';
       errorEl.textContent = (err && err.message) || 'Something went wrong. Please try again.'; errorEl.style.display='block';
+      sdmTrack('form_error', { form_type:'consultation', form_location:location.pathname, error_message:(err && err.message) || 'unknown' });
     });
   });
 }
@@ -116,9 +120,11 @@ function initAuditForm(){
     postForm('lib/audit-send.php', data).then(function(){
       submitBtn.disabled = false; submitBtn.querySelector('.btn-idle').style.display='inline'; submitBtn.querySelector('.btn-sending').style.display='none';
       successEl.style.display='block'; form.reset();
+      sdmTrack('generate_lead', { form_type:'audit', form_location:location.pathname, industry:data.industry, challenge:data.challenge });
     }).catch(function(err){
       submitBtn.disabled = false; submitBtn.querySelector('.btn-idle').style.display='inline'; submitBtn.querySelector('.btn-sending').style.display='none';
       errorEl.textContent = (err && err.message) || 'Something went wrong. Please try again.'; errorEl.style.display='block';
+      sdmTrack('form_error', { form_type:'audit', form_location:location.pathname, error_message:(err && err.message) || 'unknown' });
     });
   });
 }
@@ -146,6 +152,7 @@ function initNewsletterForm(){
         form.style.display='none';
         if(successEl) successEl.style.display='block';
         form.reset();
+        sdmTrack('sign_up', { method:'newsletter', form_location:location.pathname });
       })
       .catch(function(err){
         btn.disabled = false;
@@ -155,6 +162,7 @@ function initNewsletterForm(){
           errEl.textContent = (err && err.message) || 'Something went wrong. Please try again.';
           errEl.style.display='block';
         }
+        sdmTrack('form_error', { form_type:'newsletter', form_location:location.pathname, error_message:(err && err.message) || 'unknown' });
       });
   });
 }

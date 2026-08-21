@@ -1,0 +1,18 @@
+{
+  "name": "Sachkhand Digital Marketing",
+  "short_name": "SDM",
+  "description": "SEO-led digital marketing agency built for the AI era.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#0f172a",
+  "theme_color": "#1a56db",
+  "icons": [
+    {
+      "src": "/assets/img/logo/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

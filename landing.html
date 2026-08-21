@@ -5,10 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Marketing Agency | SEO, Ads & Branding — SDM</title>
-    <meta name="description"
-        content="Grow your brand across Australia, the UK, Canada &amp; the US with Sachkhand Digital Marketing — SEO, Meta &amp; Google Ads and web design. Book a free call.">
-    <meta name="keywords"
-        content="digital marketing agency, SEO services, Google Ads, Meta Ads, performance marketing, branding, web development, free marketing audit, strategy call">
+    <meta name="description" content="Grow your brand across Australia, the UK, Canada &amp; the US with Sachkhand Digital Marketing — SEO, Meta &amp; Google Ads and web design. Book a free call.">
+    <meta name="keywords" content="digital marketing agency, SEO services, Google Ads, Meta Ads, performance marketing, branding, web development, free marketing audit, strategy call">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="author" content="Sachkhand Digital Marketing">
     <link rel="canonical" href="https://www.sachkhanddigitalmarketing.com/landing.html">
@@ -16,18 +14,25 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Sachkhand Digital Marketing">
     <meta property="og:title" content="Digital Marketing Agency | SEO, Ads & Branding — SDM">
-    <meta property="og:description"
-        content="Grow your brand across Australia, the UK, Canada &amp; the US with Sachkhand Digital Marketing — SEO, Meta &amp; Google Ads and web design. Book a free call.">
-    <meta property="og:url" content="https://sachkhanddigitalmarketing.com/landing.html">
-    <meta property="og:image" content="https://sachkhanddigitalmarketing.com/assets/img/logo/SDM_logo_3d.svg">
+    <meta property="og:description" content="Grow your brand across Australia, the UK, Canada &amp; the US with Sachkhand Digital Marketing — SEO, Meta &amp; Google Ads and web design. Book a free call.">
+    <meta property="og:url" content="https://www.sachkhanddigitalmarketing.com/landing.html">
+    <meta property="og:image" content="https://www.sachkhanddigitalmarketing.com/assets/img/og/sdm-og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Sachkhand Digital Marketing — SEO and digital marketing built for the AI era">
+<meta property="og:locale" content="en">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Digital Marketing Agency | SEO, Ads & Branding — SDM">
-    <meta name="twitter:description"
-        content="Grow your brand across Australia, the UK, Canada &amp; the US with Sachkhand Digital Marketing — SEO, Meta &amp; Google Ads and web design. Book a free call.">
-    <meta name="twitter:image" content="https://sachkhanddigitalmarketing.com/assets/img/logo/SDM_logo_3d.svg">
+    <meta name="twitter:description" content="Grow your brand across Australia, the UK, Canada &amp; the US with Sachkhand Digital Marketing — SEO, Meta &amp; Google Ads and web design. Book a free call.">
+    <meta name="twitter:image" content="https://www.sachkhanddigitalmarketing.com/assets/img/og/sdm-og-default.png">
     <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/img/logo/favicon.ico">
+    <link rel="icon" href="assets/img/logo/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" href="assets/img/logo/favicon-48.png" sizes="48x48">
+<link rel="apple-touch-icon" href="assets/img/logo/apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#1a56db">
     <link rel="preload" href="assets/img/logo/SDM_logo_3d.svg" as="image">
     <!-- Preconnect for faster font & Calendly loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2748,6 +2753,13 @@
     }
   ]
 }</script>
+
+<!-- SDM-ANALYTICS -->
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+<script>window.sdmTrack=window.sdmTrack||function(n,p,d){if(typeof d==="function")d();};</script>
+<script src="assets/js/analytics.js" async></script>
+<!-- /SDM-ANALYTICS -->
 </head>
 
 <body> <!-- TOP BAR -->
@@ -5083,11 +5095,15 @@ stroke-linejoin="round" /> </svg> </button> -->
                 .then(function (data) {
                     if (data && data.success) {
                         ['hfc_name', 'hfc_phone', 'hfc_email', 'hfc_industry', 'hfc_service', 'hfc_goals'].forEach(function (id) { var el = document.getElementById(id); if (el) el.value = ''; });
-                        window.location.href = 'thank-you.html?source=banner';
+                        // Redirect only once the event is away, so the conversion is not lost.
+                        sdmTrack('generate_lead',
+                            { form_type: 'landing_audit', form_location: location.pathname, industry: industry, service: service },
+                            function () { window.location.href = 'thank-you.html?source=banner'; });
                         return;
                     } else {
                         showSnack((data && data.message) || 'Something went wrong. Please try again.', 'error');
                         if (btn) { btn.disabled = false; btn.innerHTML = originalHTML; }
+                        sdmTrack('form_error', { form_type: 'landing_audit', form_location: location.pathname, error_message: (data && data.message) || 'unknown' });
                     }
                 })
                 .catch(function () {

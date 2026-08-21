@@ -1,0 +1,106 @@
+# -------------------------------------------------------------
+# Sachkhand Digital Marketing -- Apache config
+# Canonical host + HTTPS, compression, caching, error pages.
+# -------------------------------------------------------------
+
+Options -Indexes
+ServerSignature Off
+DirectoryIndex index.html
+
+# -- 1. Canonical host: force HTTPS + www ---------------------
+# Every <link rel="canonical"> on this site points at
+# https://www.sachkhanddigitalmarketing.com/ -- these rules make the
+# server agree, so Google only ever crawls one version of a URL.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # http -> https  (HTTP_X_FORWARDED_PROTO covers hosts behind a proxy/CDN)
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://www.sachkhanddigitalmarketing.com%{REQUEST_URI} [R=301,L]
+
+  # non-www -> www
+  RewriteCond %{HTTP_HOST} !^www\. [NC]
+  RewriteCond %{HTTP_HOST} !^$
+  RewriteRule ^ https://www.sachkhanddigitalmarketing.com%{REQUEST_URI} [R=301,L]
+
+  # /index.html -> /   (one canonical homepage URL)
+  RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+  RewriteRule ^index\.html$ / [R=301,L]
+</IfModule>
+
+# -- 2. Error documents ---------------------------------------
+ErrorDocument 404 /404.html
+
+# -- 3. Compression -------------------------------------------
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml \
+    application/javascript application/json application/xml \
+    image/svg+xml application/ld+json
+</IfModule>
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml \
+    application/javascript application/x-javascript application/json \
+    application/xml application/rss+xml image/svg+xml application/ld+json
+  # Legacy proxy safety
+  <IfModule mod_headers.c>
+    Header append Vary Accept-Encoding
+  </IfModule>
+</IfModule>
+
+# -- 4. Caching -----------------------------------------------
+# Media/fonts are versioned by filename and cached for a year. CSS and JS are
+# edited in place, so they get a short TTL and revalidate. See section 5.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                          "access plus 1 month"
+  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType text/css                  "access plus 1 hour"
+  ExpiresByType application/javascript    "access plus 1 hour"
+  ExpiresByType image/webp                "access plus 1 year"
+  ExpiresByType image/jpeg                "access plus 1 year"
+  ExpiresByType image/png                 "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
+  ExpiresByType image/x-icon              "access plus 1 year"
+  ExpiresByType font/woff2                "access plus 1 year"
+  ExpiresByType application/xml           "access plus 1 hour"
+  ExpiresByType text/plain                "access plus 1 hour"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Media and fonts are versioned by filename (e.g. hero-720.webp), so they can
+  # be cached hard and forever.
+  <FilesMatch "\.(webp|jpe?g|png|svg|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # CSS and JS are NOT fingerprinted -- they are edited in place and redeployed
+  # under the same name. A long immutable cache would strand returning visitors
+  # on a stale stylesheet or an old analytics config. Short TTL, then revalidate
+  # (a 304 costs almost nothing).
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # -- 5. Baseline security headers ---------------------------
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# -- 6. MIME types (older Apache builds miss these) -----------
+<IfModule mod_mime.c>
+  AddType image/webp                .webp
+  AddType application/ld+json       .jsonld
+  AddType font/woff2                .woff2
+  AddType image/svg+xml             .svg
+</IfModule>
+
+# -- 7. Protect server-side handlers from direct listing ------
+<FilesMatch "^(php\.ini|mail-guard\.php)$">
+  Require all denied
+</FilesMatch>
