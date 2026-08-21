@@ -1,3 +1,11 @@
+# =============================================================================
+# NOT ACTIVE ON THE CURRENT HOST.
+# Production runs Microsoft-IIS/10.0 (GoDaddy Windows + Plesk), which ignores
+# .htaccess entirely. The live configuration is in web.config at the repo root.
+# Keep this file only in case hosting ever moves to Apache/LiteSpeed; if it
+# does, mirror any changes made to web.config back into here.
+# =============================================================================
+
 # -------------------------------------------------------------
 # Sachkhand Digital Marketing -- Apache config
 # Canonical host + HTTPS, compression, caching, error pages.
